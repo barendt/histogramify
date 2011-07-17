@@ -1,9 +1,7 @@
 import csv
 import os
 
-import numpy
 import matplotlib.pyplot as plt
-from xlrd import open_workbook
 
 class HistogramifierFileNotFoundError(Exception):
     pass
@@ -41,6 +39,11 @@ class Histogramifier(object):
         self.data = data
 
     def load_data_from_xls(self):
+        try:
+            from xlrd import open_workbook
+        except ImportError:
+            raise HistogramifierUnprocessableFileError(
+                'Cannot process Excel file without xlrd module.')
         data = list()
         wb = open_workbook(self.file_path)
         s = wb.sheets()[0]
